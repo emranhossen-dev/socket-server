@@ -20,10 +20,9 @@ const server = http.createServer(app);
 // ২. সকেট এর জন্য ডাইনামিক CORS কনফিগারেশন
 const io = new Server(server, {
   cors: {
-    // এখানে তোমার লোকালহোস্ট এবং গিটহাবে পুশ করার পর পাওয়া Vercel-এর লাইভ ডোমেইন দুটিই অ্যাক্সেস পাবে
     origin: [
       "http://localhost:3000", 
-      "https://your-frontend.vercel.app" // 👈 ডিপ্লয় করার পর এখানে তোমার আসল Vercel URL-টি বসিয়ে আরেকবার পুশ করে দিও
+      "https://support-desk-chat.vercel.app" // 👈 তোমার আসল ফ্রন্টএন্ড লাইভ URL
     ],
     methods: ["GET", "POST"],
     credentials: true
