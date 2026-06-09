@@ -44,16 +44,16 @@ io.on('connection', (socket) => {
   socket.on('send_message', async (data) => {
     const { room_id, sender_id, content, image_url, created_at } = data;
 
-    // ১. সুপার ফাস্ট রিলে: সাথে সাথে রুমে থাকা অন্য মেম্বারকে পাঠানো (উইদাউট রিফ্রেশ)
-    socket.to(room_id).emit('receive_message', data);
+    // ১. সুপার ফাস্ট রিলে: রুমে থাকা সব মেম্বারকে পাঠানো (প্রেরকসহ)
+    io.to(room_id).emit('receive_message', data);
 
-    try {
-      // ২. ব্যাকগ্রাউন্ড সিঙ্ক: ডাটাবেজে মেসেজ রাইট করা
-      await supabase.from('messages').insert([
-        { room_id, sender_id, content, image_url, created_at }
-      ]);
-    } catch (error) {
-      console.error("Database sync failed:", error);
+    // ২. ব্যাকগ্রাউন্ড সিঙ্ক: ডাটাবেজে মেসেজ রাইট করা
+    const { error } = await supabase.from('messages').insert([
+      { room_id, sender_id, content, image_url, created_at }
+    ]);
+
+    if (error) {
+      console.error("Database sync failed:", error.message, error.details, error.hint);
     }
   });
 
